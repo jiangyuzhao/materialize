@@ -190,6 +190,7 @@ pub struct Config {
 }
 
 /// Initiates a timely dataflow computation, processing materialized commands.
+/// READING NOTE: start of server
 pub fn serve(config: Config) -> Result<WorkerGuards<()>, String> {
     let experimental_mode = config.experimental_mode;
     let workers = config.command_receivers.len();
@@ -426,6 +427,7 @@ where
     }
 
     /// Draws from `dataflow_command_receiver` until shutdown.
+    /// READING NOTE: core function in dataflow
     fn run(&mut self) {
         let mut shutdown = false;
         while !shutdown {

@@ -134,6 +134,7 @@ impl ConnectionHandler for pgwire::Server {
         pgwire::match_handshake(buf)
     }
 
+    /// READING NOTE: core function to use pgwire to get sql.
     async fn handle_connection(&self, conn: SniffedStream<TcpStream>) -> Result<(), anyhow::Error> {
         // Using fully-qualified syntax means we won't accidentally call
         // ourselves (i.e., silently infinitely recurse) if the name or type of

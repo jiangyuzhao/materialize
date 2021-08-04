@@ -473,6 +473,7 @@ impl Coordinator {
     /// and feedback from dataflow workers over `feedback_rx`.
     ///
     /// You must call `bootstrap` before calling this method.
+    /// READING NOTE: entry point
     async fn serve(
         mut self,
         internal_cmd_rx: mpsc::UnboundedReceiver<Message>,
@@ -709,6 +710,7 @@ impl Coordinator {
         self.broadcast(SequencedCommand::AdvanceSourceTimestamp { id, update });
     }
 
+    /// READING NOTE: core function
     async fn message_command(&mut self, cmd: Command) {
         match cmd {
             Command::Startup {
@@ -889,6 +891,7 @@ impl Coordinator {
 
                         let internal_cmd_tx = self.internal_cmd_tx.clone();
                         let catalog = self.catalog.for_session(&session);
+                        // READING NOTE: first to parse stmt.
                         let purify_fut = sql::pure::purify(&catalog, stmt);
                         tokio::spawn(async move {
                             let result = purify_fut.await.map_err(|e| e.into());
@@ -1125,6 +1128,7 @@ impl Coordinator {
         }
     }
 
+    /// READING NOTE: entry point for statement parse.
     async fn handle_statement(
         &mut self,
         session: &mut Session,
@@ -2257,6 +2261,7 @@ impl Coordinator {
         // single-statement transaction (TransactionStatus::Started), we don't need to
         // worry about preventing compaction or choosing a valid timestamp for future
         // queries.
+        // READING NOTE: it seems there is a timestamp for select stmt.
         let timestamp = if in_transaction && when == PeekWhen::Immediately {
             let timestamp = session.get_transaction_timestamp(|| {
                 // Determine a timestamp that will be valid for anything in any schema
@@ -3035,6 +3040,7 @@ impl Coordinator {
         style: ExprPrepStyle,
     ) -> Result<OptimizedMirRelationExpr, CoordError> {
         if let ExprPrepStyle::Static = style {
+            // READING NOTE: optimize plan.
             let mut opt_expr = self.optimizer.optimize(expr, self.catalog.indexes())?;
             opt_expr.0.try_visit_mut(&mut |e| {
                 // Carefully test filter expressions, which may represent temporal filters.

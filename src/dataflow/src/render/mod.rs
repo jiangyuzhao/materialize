@@ -172,6 +172,7 @@ pub struct RelevantTokens {
 }
 
 /// Build a dataflow from a description.
+/// READING NOTE: core function to build dataflow
 pub fn build_dataflow<A: Allocate>(
     timely_worker: &mut TimelyWorker<A>,
     render_state: &mut RenderState,

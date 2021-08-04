@@ -287,6 +287,7 @@ impl fmt::Display for WorkerCount {
     }
 }
 
+/// READING NOTE: start of the whole program.
 fn main() {
     if let Err(err) = run(Args::from_args()) {
         eprintln!("materialized: {:#}", err);

@@ -252,6 +252,7 @@ pub async fn serve(config: Config) -> Result<Server, anyhow::Error> {
             // TODO(benesch): replace with `listener.incoming()` if that is
             // restored when the `Stream` trait stabilizes.
             let mut incoming = TcpListenerStream::new(listener);
+            // READING NOTE: another core function to run pgwire.
             mux.serve(incoming.by_ref().take_until(drain_tripwire))
                 .await;
         }

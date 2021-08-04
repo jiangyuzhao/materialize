@@ -46,6 +46,7 @@ use crate::normalize;
 /// time to complete. As a result purification does *not* have access to a
 /// [`Catalog`](crate::catalog::Catalog), as that would require locking access
 /// to the catalog for an unbounded amount of time.
+/// READING NOTE: first to parse stmt.
 pub fn purify(
     catalog: &dyn Catalog,
     mut stmt: Statement<Raw>,

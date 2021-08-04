@@ -92,6 +92,7 @@ impl Server {
 
                 Some(FrontendStartupMessage::Startup { version, params }) => {
                     let mut conn = FramedConn::new(conn_id, conn);
+                    // READING NOTE: to run protocol
                     protocol::run(protocol::RunParams {
                         tls_mode: self.tls.as_ref().map(|tls| tls.mode),
                         coord_client,

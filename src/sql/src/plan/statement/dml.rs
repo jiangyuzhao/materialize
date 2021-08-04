@@ -108,6 +108,7 @@ pub fn describe_select(
     Ok(StatementDesc::new(Some(desc)))
 }
 
+/// READING NOTE: core function when parse sql, will get a plan for optimize.
 pub fn plan_select(
     scx: &StatementContext,
     SelectStatement { query, as_of }: SelectStatement<Raw>,
@@ -123,6 +124,7 @@ pub fn plan_select(
         None => PeekWhen::Immediately,
     };
 
+    // READING NOTE: select stmt leads to PeekPlan!
     Ok(Plan::Peek(PeekPlan {
         source: expr,
         when,
